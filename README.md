@@ -21,7 +21,10 @@ GBAura-specific source transformations are provided in
 
 The compliance package was prepared from GBAura commit:
 
-`03d7a3f1f8fa577256fd6c5b1b1bb0536e732858`
+`201004f789091a5adbfe58a06e82e94d79807c9a`
+
+The published MPL patch module and `SaveConverterUtil.java` are byte-identical
+to the corresponding files in that audited GBAura runtime baseline.
 
 The Android build applies the MPL modification module to an isolated writable
 copy of the pinned mGBA source tree before compiling it.
