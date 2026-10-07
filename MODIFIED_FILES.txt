@@ -1,0 +1,16 @@
+CMakeLists.txt
+src/script/context.c
+src/platform/libretro/libretro.c
+src/gba/gba.c
+src/gba/video.c
+src/arm/arm.c
+src/gba/dma.c
+src/gba/audio.c
+src/core/timing.c
+src/gba/cart/ereader.c
+src/script/engines/lua.c
+src/gba/core.c
+src/gb/core.c
+include/mgba/core/core.h
+include/mgba/gba/core.h
+include/mgba/gb/core.h
