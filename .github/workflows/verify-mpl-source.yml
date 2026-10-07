@@ -1,0 +1,53 @@
+name: Verify MPL source package
+
+on:
+  push:
+    branches: [ main ]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  verify:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout compliance repository
+        uses: actions/checkout@v4
+        with:
+          submodules: recursive
+          fetch-depth: 1
+
+      - name: Confirm pinned mGBA commit
+        shell: bash
+        run: |
+          set -euo pipefail
+          EXPECTED="c3c8e5e813f245028de118a56734e1dc0f35ce2a"
+          ACTUAL="$(git -C upstream/mgba rev-parse HEAD)"
+          echo "Expected: $EXPECTED"
+          echo "Actual:   $ACTUAL"
+          test "$ACTUAL" = "$EXPECTED"
+
+      - name: Apply GBAura MPL source modifications
+        shell: bash
+        run: |
+          set -euo pipefail
+          chmod +x tools/apply-mgba-modifications.sh
+          tools/apply-mgba-modifications.sh "$RUNNER_TEMP/mgba-modified"
+
+      - name: Verify affected files exist
+        shell: bash
+        run: |
+          set -euo pipefail
+          while IFS= read -r path; do
+            [ -z "$path" ] && continue
+            test -f "$RUNNER_TEMP/mgba-modified/$path"
+          done < MODIFIED_FILES.txt
+
+      - name: Verify published MPL files
+        shell: bash
+        run: |
+          set -euo pipefail
+          test -f LICENSE
+          test -f patches/mgba_mpl_modifications.cmake
+          test -f gbaura-mpl/SaveConverterUtil.java
